@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <style>
+        body {display: flex;}
+        section {width: 50%;}
+    </style>
+</head>
+<body>
+
+    <section>
+        <h2>Cadastro</h2>
+        <form id="formEnviarCadastro">
+            <div>
+            <label for"nome">Nome:</label>
+            <input name="nome" id="nome" value="Gustavo">
+            </div>
+            <div>
+            <label for"email">E-mail:</label>
+            <input name="email" id="email" value="gustavo@viashopmoda.com.br">
+            </div>
+            <div>
+            <label for"cidade">Cidade:</label>
+            <input name="cidade" id="cidade" value="Varginha/MG">
+            </div>
+            <div>
+            <label for"tel">Telefone:</label>
+            <input type="text" name="tel" id="tel" value="35988950438">
+            </div>
+            <div>
+            <label for"tel">Data:</label>
+            <input type="text" name="data" id="data" value="2017-11-08">
+            </div>
+        
+            <button id="botaoEnviarCadastro">enviar</button>
+        </form>
+    </section>
+
+    <section>
+        <h2>Produto</h2>
+        <form id="formEnviarPedido">
+            <div>
+            <label for"nome">Produto:</label>
+            <input name="produto" id="produto" value="CONJUNTO REF. 1010">
+            </div>
+            <div>
+            <label for"email">Valor:</label>
+            <input data-tipo="datetime" name="valor" id="valor" value="32.9">
+            </div>
+            <div>
+            <label for"email">Observações:</label>
+            <textarea name="obs" id="obs">texto texto texto</textarea>
+            </div>
+
+            <button id="botaoEnviarPedido">enviar</button>
+        </form>
+    </section>
+
+    <script src="jquery.min.js"></script>
+    <script>
+        function ppost (json, acao, tabela) {
+            $.post('envia.php', {json: json, acao: acao, tabela: tabela}, function(r){
+                //console.log("enviaJson: "+enviarJson);
+                console.log(r);
+            });
+        }
+        var enviaFormPedido = document.getElementById("botaoEnviarPedido");
+        enviaFormPedido.addEventListener("click", function(event){
+            event.preventDefault();
+
+            var formPedido = document.getElementById("formEnviarPedido");
+            var inputs = formPedido.querySelectorAll("input, textarea");
+            var ObjectCampos = new Object();
+            for (var i=0; i < inputs.length; i++) {
+                ObjectCampos[inputs[i].name] = inputs[i].value;
+            }
+
+            //console.log(ObjectCampos);
+
+            var enviarJson = JSON.stringify(ObjectCampos);
+
+            ppost(enviarJson, 'insert', 'pedido');
+        });
+
+
+        var enviaFormCadastro = document.getElementById("botaoEnviarCadastro");
+        enviaFormCadastro.addEventListener("click", function(event){
+            event.preventDefault();
+
+            var form = document.getElementById("formEnviarCadastro");
+
+            var nome = form.nome.value;
+            var email = form.email.value;
+            var cidade = form.cidade.value;
+            var tel = Number(form.tel.value);
+            var data = form.data.value;
+
+            var ObjectCampos = new Object();
+            ObjectCampos["nome"] = nome;
+            ObjectCampos["email"] = email;
+            ObjectCampos["cidade"] = cidade;
+            ObjectCampos["tel"] = tel;
+            ObjectCampos["data"] = data;
+
+            var enviarJson = JSON.stringify(ObjectCampos);
+            //console.log(enviarJson);
+
+            ppost(enviarJson, 'insert', 'cadastro');
+
+            /*
+            console.log(nome);
+            console.log(email);
+            console.log(cidade);
+            console.log(tel);
+            console.log("------------------");
+
+
+            var inputsName = form.querySelectorAll("input");
+            var ObjectCampos = new Object();
+
+            for (var i = 0; i < inputsName.length; i++) {
+                ObjectCampos[inputsName[i].name] = inputsName[i].value;
+            }
+            var enviarJson = JSON.stringify(ObjectCampos);
+
+            console.log(ObjectCampos);
+            //console.log(enviarJson);
+*/
+        });
+    </script>
+</body>
+</html>
